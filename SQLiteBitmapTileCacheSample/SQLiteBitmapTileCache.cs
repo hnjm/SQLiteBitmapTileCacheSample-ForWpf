@@ -14,26 +14,34 @@ namespace ThinkGeo.MapSuite
     public class SQLiteBitmapTileCache : BitmapTileCache
     {
         private string connectionString;
-        private string defaultDatabaseName = "tileCache.db";
-        private const string indexTableName = "cacheImagesTable";
+
+        private const string defaultCacheId = "cacheImagesTable";
+        private const string defaultCacheFile = "tileCache.db";
+
         private const string keyColumnName = "imageKey";
         private const string blobColumnName = "imageBlob";
 
         public string ConnectionString { get => connectionString; set => connectionString = value; }
-        public string DatabaseName { get => defaultDatabaseName; set => defaultDatabaseName = value; }
-        
-        public SQLiteBitmapTileCache() : this("SQLiteBitmapTileCache")
+
+        public static string DefaultCacheFile => defaultCacheFile;
+        public static string DefaultCacheId => defaultCacheId;
+
+        public SQLiteBitmapTileCache()
+        : this(defaultCacheFile)
         { }
 
-        public SQLiteBitmapTileCache(string cacheId) : this(cacheId, TileImageFormat.Png)
+        public SQLiteBitmapTileCache(string cacheFile)
+            : this(cacheFile, defaultCacheId)
         { }
 
-        public SQLiteBitmapTileCache(string cacheId, TileImageFormat imageFormat) : this(cacheId, imageFormat, new MapSuiteTileMatrix(590591790))
+        public SQLiteBitmapTileCache(string cacheFile, string cacheId)
+            : this(cacheFile, cacheId, TileImageFormat.Png, new MapSuiteTileMatrix(590591790))
         { }
 
-        public SQLiteBitmapTileCache(string cacheId, TileImageFormat imageFormat, TileMatrix tileMatrix) : base(cacheId, imageFormat, tileMatrix)
+        public SQLiteBitmapTileCache(string cacheFile, string cacheId, TileImageFormat imageFormat, TileMatrix tileMatrix)
+            : base(cacheId, imageFormat, tileMatrix)
         {
-            string sqliteStatement = $"CREATE TABLE IF NOT EXISTS {indexTableName} ({keyColumnName} TEXT, {blobColumnName} BLOB)";
+            string sqliteStatement = $"CREATE TABLE IF NOT EXISTS {defaultCacheId} ({keyColumnName} TEXT, {blobColumnName} BLOB)";
             ExecuteSqlNonQuery(sqliteStatement);
         }
 
@@ -46,7 +54,7 @@ namespace ThinkGeo.MapSuite
             {
                 string Key = string.Format("{0}/{1}/{2}-{3}" + ImageFormat.ToString(), CacheId.ToLowerInvariant(), this.TileMatrix.Scale, row, column);
 
-                string sqliteStatement = $"select * from  {indexTableName} where {keyColumnName} = '{Key}'";
+                string sqliteStatement = $"select * from  {defaultCacheId} where {keyColumnName} = '{Key}'";
 
                 Collection<GeoImage> images = GetImagesByColumnName(sqliteStatement, blobColumnName);
                 if (images.Count > 0)
@@ -79,7 +87,7 @@ namespace ThinkGeo.MapSuite
                 byte[] buffer = bitmapStream.ToArray();
                 bitmapStream.Close();
 
-                string sqliteStatement = $"INSERT OR REPLACE INTO {indexTableName} ({keyColumnName}, {blobColumnName}) values (@imageKey, @imageBlob)";
+                string sqliteStatement = $"INSERT OR REPLACE INTO {defaultCacheId} ({keyColumnName}, {blobColumnName}) values (@imageKey, @imageBlob)";
                 SQLiteParameter[] parameters = {
                         new SQLiteParameter("@imageKey", DbType.String, 100),
                         new SQLiteParameter("@imageBlob", DbType.Binary)
@@ -202,7 +210,7 @@ namespace ThinkGeo.MapSuite
                     connection.Open();
                     SQLiteDataReader sdr = cmd.ExecuteReader();
                     while (sdr.Read())
-                    {   
+                    {
                         long bytesRead;
                         long fieldOffset = 0;
                         byte[] buffer = new byte[2048];
@@ -214,10 +222,10 @@ namespace ThinkGeo.MapSuite
                             {
                                 stream.Write(buffer, 0, (int)bytesRead);
                                 fieldOffset += bytesRead;
-                            }                            
+                            }
                             images.Add(new GeoImage(new Bitmap(stream)));
                         }
-                        
+
                     }
                     return images;
                 }
@@ -240,7 +248,7 @@ namespace ThinkGeo.MapSuite
             {
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    connectionString = @"Data Source=" + defaultDatabaseName;
+                    connectionString = @"Data Source=" + defaultCacheFile;
                 }
 
                 return new SQLiteConnection(connectionString);
