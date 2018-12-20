@@ -17,13 +17,14 @@ namespace SQLiteBitmapTileCacheSample
 
         private void map_Loaded(object sender, RoutedEventArgs e)
         {
-            map.MapUnit = GeographyUnit.DecimalDegree;
+            map.MapUnit = GeographyUnit.Meter;
+            map.ZoomLevelSet = ThinkGeoCloudMapsOverlay.GetZoomLevelSet();
 
-            WorldStreetsAndImageryOverlay layerOverlay = new WorldStreetsAndImageryOverlay();
-            layerOverlay.TileCache = new SQLiteBitmapTileCache();
-            map.Overlays.Add(layerOverlay);
+            ThinkGeoCloudMapsOverlay baseOverlay = new ThinkGeoCloudMapsOverlay();
+            baseOverlay.TileCache = new SQLiteBitmapTileCache();
+            map.Overlays.Add(baseOverlay);
 
-            map.CurrentExtent = new RectangleShape(-180, 180, 180, -180);
+            map.CurrentExtent = new RectangleShape(-20037508.3427891, 20037508.2314698, 20037508.3427891, -20037508.2314698);
             map.Refresh();
         }
     }
