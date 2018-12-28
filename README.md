@@ -4,7 +4,7 @@
 
 This sample shows how you can cache the tile images in SQLite database.
 
-![Screenshot](https://github.com/ThinkGeo/SQLiteBitmapTileCacheSample-ForWpf/blob/master/ScreenShot.png)
+![Screenshot](https://github.com/ThinkGeo/SQLiteBitmapTileCacheSample-ForWpf/blob/master/Screenshot.gif)
 
 ### Requirements
 This sample makes use of the following NuGet Packages
