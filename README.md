@@ -1,8 +1,10 @@
-# SQLiteBitmapTileCacheSample-ForWpf
+# SQLite Bitmap Tile Cache Sample for Wpf
 
 ### Description
 
 This sample shows how you can cache the tile images in SQLite database.
+
+Please refer to [Wiki](http://wiki.thinkgeo.com/wiki/map_suite_desktop_for_wpf) for the details.
 
 ![Screenshot](https://github.com/ThinkGeo/SQLiteBitmapTileCacheSample-ForWpf/blob/master/Screenshot.gif)
 
