@@ -19,7 +19,12 @@ This sample makes use of the following NuGet Packages
 
 ### About the Code
 ```csharp
-WorldStreetsAndImageryOverlay layerOverlay = new WorldStreetsAndImageryOverlay();
+/*===========================================
+  Backgrounds for this sample are powered by ThinkGeo Cloud Maps and require
+  a Client ID and Secret. These were sent to you via email when you signed up
+  with ThinkGeo, or you can register now at https://cloud.thinkgeo.com.
+===========================================*/
+ThinkGeoCloudRasterMapsOverlay layerOverlay = new ThinkGeoCloudRasterMapsOverlay();
 layerOverlay.TileCache = new SQLiteBitmapTileCache();
 ```
 ### Getting Help

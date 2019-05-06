@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using ThinkGeo.MapSuite;
+using ThinkGeo.MapSuite.Layers;
 using ThinkGeo.MapSuite.Shapes;
 using ThinkGeo.MapSuite.Wpf;
 
@@ -18,9 +19,14 @@ namespace SQLiteBitmapTileCacheSample
         private void map_Loaded(object sender, RoutedEventArgs e)
         {
             map.MapUnit = GeographyUnit.Meter;
-            map.ZoomLevelSet = ThinkGeoCloudMapsOverlay.GetZoomLevelSet();
+            map.ZoomLevelSet = new ThinkGeoCloudMapsZoomLevelSet();
 
-            ThinkGeoCloudMapsOverlay baseOverlay = new ThinkGeoCloudMapsOverlay();
+            /*===========================================
+               Backgrounds for this sample are powered by ThinkGeo Cloud Maps and require
+               a Client ID and Secret. These were sent to you via email when you signed up
+               with ThinkGeo, or you can register now at https://cloud.thinkgeo.com.
+            ===========================================*/
+            ThinkGeoCloudRasterMapsOverlay baseOverlay = new ThinkGeoCloudRasterMapsOverlay();
             baseOverlay.TileCache = new SQLiteBitmapTileCache();
             map.Overlays.Add(baseOverlay);
 
